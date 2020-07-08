@@ -1,6 +1,4 @@
-const baseuri = 'api.openweathermap.org/data/2.5/weather?zip=';
-const apiKey = '';
-const projectData = [];
+let projectData = {};
 
 const express = require('express');
 const app = express();
@@ -21,24 +19,14 @@ const listening = () => {
 app.use(express.static('website'));
 
 app.listen(port, listening);
+let i = -1;
+app.post('/data', (req, res) => {
+    i++;
+    projectData[`${i}`] = req.body;
+    console.log(projectData);
+    res.send({ done: 'true' });
+});
 
-let zip = null;
-
-app.post('/zip', (req, res) => {
-    zip = req.body['zip'];
-    console.log(zip);
-    res.send('done');
-})
-
-
-// const getData = async(zip) => {
-//     const req = await fetch(baseuri + zip + apiKey);
-//     try {
-//         const data = await req.json();
-//         console.log('data');
-//         return data;
-
-//     } catch (e) {
-//         console.log('error:' + e);
-//     }
-// }
+app.get('/search', (req, res) => {
+    res.send(projectData[`${i}`]);
+});
